@@ -43,7 +43,10 @@ This project uses free, open APIs that do **not** require an API key.
 
 1. **Clone** this repository or download it as a ZIP file.
    ```bash
-   git clone https://github.com/dilshankumara001001/currency-converter.git<img width="941" height="846" alt="converter" src="https://github.com/user-attachments/assets/4001bfde-15ec-4549-af48-6acc38431677" />
+   git clone https://github.com/dilshankumara001001/currency-converter.git
+
+
+   <img width="941" height="846" alt="converter" src="https://github.com/user-attachments/assets/4001bfde-15ec-4549-af48-6acc38431677" />
 
 
 
