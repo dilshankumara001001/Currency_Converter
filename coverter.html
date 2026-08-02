@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💱 Currency Converter</title>
+    
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .container {
+            background: #1e293b;
+            padding: 2.5rem;
+            border-radius: 24px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid #334155;
+            transition: 0.3s;
+        }
+
+        h1 {
+            color: #e2e8f0;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* ===== CONVERTER BOX ===== */
+        .converter-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .input-group label {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-left: 4px;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 0.85rem 1rem;
+            border: 2px solid #334155;
+            border-radius: 14px;
+            background: #0f172a;
+            color: #f1f5f9;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            outline: none;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-group input {
+            font-weight: 600;
+        }
+
+        /* Custom select arrow */
+        .input-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px;
+            padding-right: 2.5rem;
+        }
+
+        /* ===== SWAP BUTTON ===== */
+        #swapBtn {
+            align-self: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px 0;
+            flex-shrink: 0;
+        }
+
+        #swapBtn:hover {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            transform: rotate(180deg) scale(1.05);
+        }
+
+        #swapBtn:active {
+            transform: rotate(180deg) scale(0.9);
+        }
+
+        /* ===== CONVERT BUTTON ===== */
+        #convertBtn {
+            padding: 0.95rem;
+            border: none;
+            border-radius: 14px;
+            background: #3b82f6;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.25rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        #convertBtn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        #convertBtn:active {
+            transform: translateY(0px);
+        }
+
+        #convertBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== RESULT BOX ===== */
+        .result-box {
+            margin-top: 0.75rem;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            background: #0f172a;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1e293b;
+            transition: 0.3s;
+        }
+
+        #resultText {
+            color: #e2e8f0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .result-error {
+            color: #f87171 !important;
+            font-size: 1.1rem !important;
+        }
+
+        /* ===== UPDATE INFO ===== */
+        .update-info {
+            color: #64748b;
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #1e293b;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            #resultText {
+                font-size: 1.3rem;
+            }
+            .input-group input,
+            .input-group select {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.9rem;
+            }
+            #swapBtn {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>💱 Currency Converter</h1>
+        <p class="subtitle">Real-time exchange rates</p>
+
+        <div class="converter-box">
+            <!-- Amount -->
+            <div class="input-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" value="1" min="0" step="any" />
+            </div>
+
+            <!-- From Currency -->
+            <div class="input-group">
+                <label for="fromCurrency">From</label>
+                <select id="fromCurrency"></select>
+            </div>
+
+            <!-- Swap Button -->
+            <button id="swapBtn" title="Swap currencies">⇄</button>
+
+            <!-- To Currency -->
+            <div class="input-group">
+                <label for="toCurrency">To</label>
+                <select id="toCurrency"></select>
+            </div>
+
+            <!-- Convert Button -->
+            <button id="convertBtn">Convert Now</button>
+
+            <!-- Result -->
+            <div class="result-box">
+                <span id="resultText">—</span>
+            </div>
+        </div>
+
+        <p class="update-info" id="updateInfo">⏳ Loading exchange rates...</p>
+    </div>
+
+    <script>
+        // =================================================================
+        // CONFIGURATION
+        // =================================================================
+        // Uses @irfanokr/currency-api (No API Key required, 170+ currencies)
+        // Fallback: Frankfurter API (No API Key required)
+        // =================================================================
+
+        const API_BASE = 'https://cdn.jsdelivr.net/gh/irfanokr/currency-api@main/v1/currencies';
+        const FALLBACK_API = 'https://api.frankfurter.app/latest';
+
+        // =================================================================
+        // DOM REFERENCES
+        // =================================================================
+        const amountInput = document.getElementById('amount');
+        const fromSelect = document.getElementById('fromCurrency');
+        const toSelect = document.getElementById('toCurrency');
+        const swapBtn = document.getElementById('swapBtn');
+        const convertBtn = document.getElementById('convertBtn');
+        const resultText = document.getElementById('resultText');
+        const updateInfo = document.getElementById('updateInfo');
+
+        // =================================================================
+        // CURRENCY DATABASE (Code + Full Name)
+        // =================================================================
+        const currencies = {
+            USD: 'United States Dollar',
+            EUR: 'Euro',
+            GBP: 'British Pound',
+            JPY: 'Japanese Yen',
+            AUD: 'Australian Dollar',
+            CAD: 'Canadian Dollar',
+            CHF: 'Swiss Franc',
+            CNY: 'Chinese Yuan',
+            INR: 'Indian Rupee',
+            PKR: 'Pakistani Rupee',
+            LKR: 'Sri Lankan Rupee',
+            NZD: 'New Zealand Dollar',
+            SGD: 'Singapore Dollar',
+            HKD: 'Hong Kong Dollar',
+            KRW: 'South Korean Won',
+            BRL: 'Brazilian Real',
+            ZAR: 'South African Rand',
+            SEK: 'Swedish Krona',
+            NOK: 'Norwegian Krone',
+            DKK: 'Danish Krone',
+            PLN: 'Polish Zloty',
+            THB: 'Thai Baht',
+            IDR: 'Indonesian Rupiah',
+            MYR: 'Malaysian Ringgit',
+            PHP: 'Philippine Peso',
+            VND: 'Vietnamese Dong',
+            SAR: 'Saudi Riyal',
+            AED: 'UAE Dirham',
+            TRY: 'Turkish Lira',
+            RUB: 'Russian Ruble',
+            MXN: 'Mexican Peso',
+            ARS: 'Argentine Peso',
+            CLP: 'Chilean Peso',
+            COP: 'Colombian Peso',
+            PEN: 'Peruvian Sol',
+            EGP: 'Egyptian Pound',
+            NGN: 'Nigerian Naira',
+            KES: 'Kenyan Shilling',
+            GHS: 'Ghanaian Cedi'
+        };
+
+        // =================================================================
+        // POPULATE DROPDOWNS
+        // =================================================================
+        function populateDropdowns() {
+            const codes = Object.keys(currencies);
+            
+            // Clear
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            codes.forEach(code => {
+                const opt1 = document.createElement('option');
+                opt1.value = code;
+                opt1.textContent = `${code} - ${currencies[code]}`;
+                fromSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = code;
+                opt2.textContent = `${code} - ${currencies[code]}`;
+                toSelect.appendChild(opt2);
+            });
+
+            // Default selections
+            fromSelect.value = 'USD';
+            toSelect.value = 'EUR';
+        }
+
+        // =================================================================
+        // FETCH EXCHANGE RATES (Primary + Fallback)
+        // =================================================================
+        async function fetchExchangeRates(baseCurrency) {
+            // Try Primary API (irfanokr)
+            try {
+                const url = `${API_BASE}/${baseCurrency.toLowerCase()}.json`;
+                const response = await fetch(url);
+
+                if (!response.ok) throw new Error('Primary API request failed');
+
+                const data = await response.json();
+
+                // Extract rates for the base currency
+                const rawRates = data[baseCurrency.toLowerCase()];
+                if (!rawRates) throw new Error('Rates not found in primary response');
+
+                // Convert all keys to UPPERCASE for consistency
+                const rates = {};
+                for (const [key, value] of Object.entries(rawRates)) {
+                    rates[key.toUpperCase()] = value;
+                }
+
+                // Update timestamp
+                updateInfo.textContent = `📅 Updated: ${data.date || 'Today'} (via primary source)`;
+
+                return {
+                    base: baseCurrency,
+                    date: data.date || new Date().toISOString().split('T')[0],
+                    rates: rates
+                };
+
+            } catch (error) {
+                console.warn('⚠️ Primary API failed, using fallback (Frankfurter)...', error);
+
+                // Try Fallback API (Frankfurter)
+                try {
+                    const fallbackUrl = `${FALLBACK_API}?base=${baseCurrency}`;
+                    const response = await fetch(fallbackUrl);
+
+                    if (!response.ok) throw new Error('Fallback API request failed');
+
+                    const data = await response.json();
+
+                    // Frankfurter returns rates with UPPERCASE keys already
+                    updateInfo.textContent = `📅 Updated: ${data.date} (via Frankfurter)`;
+
+                    return {
+                        base: data.base,
+                        date: data.date,
+                        rates: data.rates
+                    };
+
+                } catch (fallbackError) {
+                    console.error('❌ All APIs failed:', fallbackError);
+                    throw new Error('Unable to fetch exchange rates. Please check your internet connection.');
+                }
+            }
+        }
+
+        // =================================================================
+        // PERFORM CONVERSION
+        // =================================================================
+        async function convertCurrency() {
+            const amount = parseFloat(amountInput.value);
+            const from = fromSelect.value;
+            const to = toSelect.value;
+
+            // ---- Validation ----
+            if (isNaN(amount) || amount < 0) {
+                resultText.textContent = '❌ Please enter a valid amount';
+                resultText.className = 'result-error';
+                return;
+            }
+
+            if (from === to) {
+                resultText.textContent = `${amount.toFixed(2)} ${from} = ${amount.toFixed(2)} ${to}`;
+                resultText.className = '';
+                return;
+            }
+
+            // ---- Loading state ----
+            convertBtn.disabled = true;
+            convertBtn.textContent = '⏳ Converting...';
+            resultText.textContent = '⏳ Loading rates...';
+            resultText.className = '';
+
+            try {
+                const data = await fetchExchangeRates(from);
+
+                // Check if target currency exists in rates
+                if (!data.rates[to]) {
+                    throw new Error(`Exchange rate for ${to} is not available.`);
+                }
+
+                const rate = data.rates[to];
+                const result = amount * rate;
+
+                // Format the result nicely
+                const formattedResult = result.toFixed(4);
+                const formattedAmount = amount.toFixed(2);
+                
+                resultText.textContent = `${formattedAmount} ${from} = ${formattedResult} ${to}`;
+                resultText.className = '';
+
+            } catch (error) {
+                console.error('Conversion error:', error);
+                resultText.textContent = `❌ ${error.message}`;
+                resultText.className = 'result-error';
+            } finally {
+                convertBtn.disabled = false;
+                convertBtn.textContent = 'Convert Now';
+            }
+        }
+
+        // =================================================================
+        // SWAP CURRENCIES
+        // =================================================================
+        function swapCurrencies() {
+            const fromVal = fromSelect.value;
+            const toVal = toSelect.value;
+
+            fromSelect.value = toVal;
+            toSelect.value = fromVal;
+
+            // Auto-convert after swapping
+            convertCurrency();
+        }
+
+        // =================================================================
+        // EVENT LISTENERS
+        // =================================================================
+        // --- Convert button ---
+        convertBtn.addEventListener('click', convertCurrency);
+
+        // --- Swap button ---
+        swapBtn.addEventListener('click', swapCurrencies);
+
+        // --- Enter key on amount input ---
+        amountInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                convertCurrency();
+            }
+        });
+
+        // --- Auto-convert on currency change ---
+        fromSelect.addEventListener('change', convertCurrency);
+        toSelect.addEventListener('change', convertCurrency);
+
+        // --- Auto-convert on amount input (with debounce) ---
+        let debounceTimer;
+        amountInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(convertCurrency, 600);
+        });
+
+        // =================================================================
+        // INITIALIZE APP
+        // =================================================================
+        populateDropdowns();
+
+        // Wait a tiny bit for DOM to settle, then load initial conversion
+        setTimeout(convertCurrency, 400);
+    </script>
+
+</body>
+</html>
