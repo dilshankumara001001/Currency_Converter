@@ -6,7 +6,7 @@
 
 ---
 
-## ✨ Features
+✨ Features
 
 - ✅ **No API Key Required** – Works out of the box.
 - ✅ **Live Exchange Rates** – Fetches real-time data from public APIs.
