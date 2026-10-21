@@ -16,7 +16,7 @@
 - ✅ **Fully Responsive** – Optimized for desktop, tablet, and mobile devices.
 - ✅ **Fallback API** – Automatically switches to a backup API if the primary one fails.
 
----
+
 
 ## 🛠 Tech Stack
 
