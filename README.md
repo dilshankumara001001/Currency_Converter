@@ -1,6 +1,6 @@
  💱 Currency Converter
 
-A sleek, real-time currency converter web application that uses live exchange rates to convert between different currencies instantly. 
+ sleek, real-time currency converter web application that uses live exchange rates to convert between different currencies instantly. 
 
 **The best part?** No API key is required! Just download and run.
 
