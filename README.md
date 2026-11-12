@@ -1,4 +1,3 @@
-           
 💱 Currency Converter
 
  sleek, real-time currency converter web application that uses live exchange rates to convert between different currencies instantly. 
